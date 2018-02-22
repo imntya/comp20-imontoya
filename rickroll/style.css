@@ -1,0 +1,22 @@
+body {
+    background-image: url("gradient.png");
+}
+
+h1 {
+    font-size: 50px;
+    font-family: "Impact";
+    text-align: center;
+    color: deepskyblue;
+}
+
+#rickroll{
+    margin: auto;
+    display: block;
+
+}
+#lyrics {
+    text-align: center;
+    color: aliceblue;
+    size: 10px;
+
+}
