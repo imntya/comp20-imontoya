@@ -1,22 +1,30 @@
 body {
-    background-image: url("gradient.png");
+    background: repeating-radial-gradient(circle, magenta, cyan 15%); 
+    background-attachment: fixed;
 }
 
 h1 {
     font-size: 50px;
     font-family: "Impact";
     text-align: center;
-    color: deepskyblue;
+    color: magenta;
+    outline-color: black;
+    font-family: "Impact";
+    background-color: aqua;
+    margin: 1%;
+    border-radius: 50px;
+    resize: 640px;
 }
 
 #rickroll{
     margin: auto;
     display: block;
-
 }
+
 #lyrics {
     text-align: center;
-    color: aliceblue;
-    size: 10px;
-
+    color: cyan;
+    background-color: magenta;
+    margin: 1%;
+    border-radius: 50px;
 }

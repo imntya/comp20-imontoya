@@ -8,7 +8,7 @@
 
     <body>
 
-        <h1 id="title">Rick Roll</h1>
+        <h1 id="title">YOU JUST GOT RICK ROLL'D</h1>
 
         <video src="https://www.cs.tufts.edu/comp/20/rickroll.mp4" id="rickroll" controls></video>
 
@@ -17,6 +17,7 @@
         <script>
             video = document.getElementById("rickroll");
             lyrics = document.getElementById("lyrics");
+           
             rickroll.addEventListener("timeupdate", function(){
 
                 if (video.currentTime < 18){
@@ -56,11 +57,11 @@
                 }
 
                 else if (video.currentTime < 161){
-                    lyrics.innerHTML = " b";
+                    lyrics.innerHTML = "<p>I just wanna tell you how I'm feeling<br>Gotta make you understand</p>";
                 }
 
                 else if (video.currentTime < 178){
-                    lyrics.innerHTML = "a ";
+                    lyrics.innerHTML = "<p>Never gonna give you up<br> Never gonna let you down <br>Never gonna run around and desert you<br>Never gonna make you cry<br>Never gonna say goodbye<br>Never gonna tell a lie and hurt you</p>";
                 }
 
                 else {
