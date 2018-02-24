@@ -11,9 +11,9 @@ h1 {
     outline-color: black;
     font-family: "Impact";
     background-color: aqua;
-    margin: 1%;
     border-radius: 50px;
-    resize: 640px;
+    background-width: 600px;
+
 }
 
 #rickroll{
