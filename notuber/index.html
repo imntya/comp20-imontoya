@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <title>NotUber</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwfO3Kf3o6Za1tJRSFA6sjEYoRCYXatlM&callback=initMap"
+    async defer></script>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      function initMap()
+      {
+        // Miami Beach
+        var landmark = new google.maps.LatLng(25.790654, -80.1300455);
+      
+        // Set up map
+        var myOptions = {
+          zoom: 13, // The larger the zoom number, the bigger the zoom
+          center: landmark,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        
+        // Create the map in the "map_canvas" <div>
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+      }
+    </script>
+  </head>
+  
+  <body onload="initMap()">
+    <h1>NotUber</h1>
+    <div id="map_canvas"></div>
+  </body>
+</html>
