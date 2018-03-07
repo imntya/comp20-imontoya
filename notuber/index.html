@@ -8,11 +8,13 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwfO3Kf3o6Za1tJRSFA6sjEYoRCYXatlM&callback=getMyLocation"
     async defer></script>
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry"
+    async defer></script> -->
+
     <link rel="stylesheet" href="style.css"/>
     <script>
 
-      //var landmark = new google.maps.LatLng(25.790654, -80.1300455);
-       username = "check email";
+       var username = "cKkHI7M4Ux";
        var me;
        var map;
        myOptions = {
@@ -38,22 +40,21 @@
 
             else 
             {
-              alert("Geolocation disabled :(");
+              document.getElementById("map_canvas").innerHTML = "Geolocation disabled :(";
             }
         }
 
       //function to initialize map
       function initMap()
         {   
-          // Create the map in the "map_canvas" <div>
-
+            // Create the map in the "map_canvas" <div>
             map = new google.maps.Map(document.getElementById("map_canvas"));
             map.setCenter(me);
             map.setZoom(15);
             setMarker();
         }
 
-        function setMarker()
+      function setMarker()
         {
           var marker = new google.maps.Marker({
             position: me,
@@ -72,6 +73,34 @@
             infowindow.setContent(marker.title);
             infowindow.open(map, marker);
           });
+          requestData();
+        }
+
+      function requestData()
+        {
+          var request = new XMLHttpRequest();
+
+          request.open('POST', "https://jordan-marsh.herokuapp.com/rides", true);
+          console.log("data sent, post good")
+
+          request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+          request.onload = function () 
+          {
+              data = JSON.parse(this.responseText);
+              if(data["vehicles"])
+              {
+                vehicles(data, username)
+              }
+
+              else if(data["passengers"])
+              {
+                passengers(data, username)
+              }
+          };
+
+          request.send("username=" + username + "&lat=" + myLat + "&lng=" + myLng);
+          console.log("data sent")
         }
 
 
