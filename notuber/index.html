@@ -3,7 +3,7 @@
 <html>
 
   <head>
-    <title>{No Tuber}</title>
+    <title>No Tuber</title>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwfO3Kf3o6Za1tJRSFA6sjEYoRCYXatlM&callback=getMyLocation"
@@ -17,22 +17,22 @@
        var username = "cKkHI7M4Ux";
        var me;
        var map;
-       myOptions = {
-          center: me,
-          zoom: 13,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          };
-
 
       function getMyLocation()
         {
           if (navigator.geolocation)
             { 
               navigator.geolocation.getCurrentPosition(function(position) {
+                myOptions = {
+                  center: me,
+                  zoom: 13,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP,
+                  };
+
                 myLat = position.coords.latitude;
                 myLng = position.coords.longitude;
 
-                me = new google.maps.LatLng(myLat, myLng);
+                me = {lat:myLat, lng:myLng};
                 
                 initMap(me);
               });
@@ -60,7 +60,7 @@
           var myMarker = new google.maps.Marker(
           {
             position: me,
-            title: username + "</br>" + " Distance to nearest marker: ",
+            title: username,
             icon: "spiderman.png",
             animation: google.maps.Animation.DROP
           });
@@ -69,12 +69,12 @@
           
           //global info window
           
-          var infowindow = new google.maps.InfoWindow();
-          // Open info window on click of marker
-          google.maps.event.addListener(myMarker, 'click', function() {
-            infowindow.setContent(myMarker.title);
-            infowindow.open(map, myMarker);
-          });
+          // var infowindow = new google.maps.InfoWindow();
+          // // Open info window on click of marker
+          // google.maps.event.addListener(myMarker, 'click', function() {
+          //   infowindow.setContent(myMarker.title);
+          //   infowindow.open(map, myMarker);
+          // });
           requestData(map, myMarker, me);
         }
 
@@ -101,32 +101,50 @@
 
         //iterates through data to set marker for each vehicle
         function vehicles(map, myMarker, me, data, username)
-         {
+           {
+          var nearest = 1000000000;
           var infowindow = new google.maps.InfoWindow();
-          for (i = 0; i < data.passengers.length; i++) 
+          for (i = 0; i < data.vehicles.length; i++) 
             {
               var marker = new google.maps.Marker({
-                  position: {lat: data.passengers[i].lat, lng: data.passengers[i].lng},
+                  position: {lat: data.vehicles[i].lat, lng: data.vehicles[i].lng},
                   map: map,
-                  title: data.passengers[i].username,
+                  title: data.vehicles[i].username,
                   icon: "car.png",
                   animation: google.maps.Animation.DROP
                 });
-                name = data.passengers[i].username;
-                google.maps.event.addListener(marker,'click', (function(marker,name,infowindow){ 
+
+                name = data.vehicles[i].username;
+                var coords1 = [me.lng, me.lat];
+                var coords2 = [data.vehicles[i].lng, data.vehicles[i].lat];
+
+                distance = haversineDistance(coords1, coords2, true);
+                if (distance < nearest)
+                  {
+                    nearest = distance;
+                  }
+                var content = "User: " + name + "</br>" + "Vehicle is " + distance + " miles away.";
+                google.maps.event.addListener(marker,'click', (function(marker, content, infowindow){ 
                       return function() 
                       {
-                          infowindow.setContent(name);
-                          infowindow.open(map,marker);
+                        infowindow.setContent(content);
+                        infowindow.open(map,marker);
                       };
-                  })(marker,name,infowindow));
-                  };
-            }
+                  })(marker,content,infowindow));
+            };
+            var infowindow = new google.maps.InfoWindow();
+          // Open info window on click of marker
+            google.maps.event.addListener(myMarker, 'click', function() {
+            infowindow.setContent(myMarker.title + "</br>" + "Nearest vehicle is " + nearest + " miles away.");
+            infowindow.open(map, myMarker);
+          });
+        }
 
         //iterates through data to set marker for each passenger
         //passengers are potatos please dont ask why
         function passengers(map, myMarker, me, data, username)
         {
+          var nearest = 1000000000;
           var infowindow = new google.maps.InfoWindow();
           for (i = 0; i < data.passengers.length; i++) 
             {
@@ -137,19 +155,62 @@
                   icon: "potato.png",
                   animation: google.maps.Animation.DROP
                 });
+
                 name = data.passengers[i].username;
-                google.maps.event.addListener(marker,'click', (function(marker,name,infowindow){ 
+                var coords1 = [me.lng, me.lat];
+                var coords2 = [data.passengers[i].lng, data.passengers[i].lat];
+
+                distance = haversineDistance(coords1, coords2, true);
+                if (distance < nearest)
+                  {
+                    nearest = distance;
+                  }
+                var content = "User: " + name + "</br>" + "Passenger is " + distance + " miles away.";
+                google.maps.event.addListener(marker,'click', (function(marker, content, infowindow){ 
                       return function() 
                       {
-                          infowindow.setContent(name);
-                          infowindow.open(map,marker);
+                        infowindow.setContent(content);
+                        infowindow.open(map,marker);
                       };
-                  })(marker,name,infowindow));
-                  };
+                  })(marker,content,infowindow));
+            };
+            var infowindow = new google.maps.InfoWindow();
+          // Open info window on click of marker
+            google.maps.event.addListener(myMarker, 'click', function() {
+            infowindow.setContent(myMarker.title + "</br>" + "Nearest passenger is " + nearest + " miles away.");
+            infowindow.open(map, myMarker);
+          });
+        }
+
+            function haversineDistance(coords1, coords2, isMiles) 
+              {
+                function toRad(x) 
+                {
+                  return x * Math.PI / 180;
+                }
+
+                var lon1 = coords1[0];
+                var lat1 = coords1[1];
+
+                var lon2 = coords2[0];
+                var lat2 = coords2[1];
+
+                var R = 6371; // km
+
+                var x1 = lat2 - lat1;
+                var dLat = toRad(x1);
+                var x2 = lon2 - lon1;
+                var dLon = toRad(x2)
+                var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                var d = R * c;
+
+                if(isMiles) d /= 1.60934;
+                d = Number.parseFloat(d).toPrecision(2);
+                return d;
             }
-
-
-           // function findDistance()
 
   //if you must know it's because someone thought i was working on "No Tuber" and potatos are tubers so here we are
   </script>
