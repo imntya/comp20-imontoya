@@ -1,12 +1,13 @@
 Isabella Montoya
 imonto01
 COMP 20
+ASSIGNMENT 2
 
-1. Map, my geolocation, my marker, XMR, set vehicles/passengers and their marker functions work as of now.
-
-
-2. I have spoken to Nimish, Priya, and Lexi about this project. 
+1. All aspects have been implemented correctly.
 
 
-3. About 10 as of now, with many trial and error files. 
+2. I have spoken to Nimish, Priya, and Lexi about this project (and someone else at Halligan for a 'google is undefined' error but I dont know their name- sorry). ALSO I FORGOT TO PUSH THE LATEST README ON TIME, SORRY.
+
+
+3. About 12 as of now, with many trial and error files. 
 
