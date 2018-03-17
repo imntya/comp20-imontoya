@@ -10,13 +10,6 @@
     <script>
         $(document).ready(function()
         {
-            //outside keypress function, iterate through localStorage and place in log div
-            // for (var i = 0; i < localStorage.length; i++)
-            // {
-            //     date = datetime.getTime();
-            //     $('body').append(localStorage.getItem(localStorage.key(i)));
-            // }
-
             $(document).keypress(function(e) 
             {
                 // on hitting enter 
@@ -24,11 +17,10 @@
                 {
                     var date = new Date();
                     var key = date.getTime();
-                    console.log(date)
-                    console.log(key)
 
                     // set input to text var
                     var text = $('#msg').val();
+                    text = "<p>" + date + " - " + text + "</p>";
 
                     // add to local storage
                     localStorage.setItem(key, text);
@@ -36,14 +28,21 @@
                     // prepend text to "log" div
                     $('#log').prepend(text);
 
-
+                    //clears input box after enter
+                    $('#msg').val('');
                 }
             }); 
+
+            //load previous localstorage items in log div
+            for(var key in localStorage) {
+  $('body').append(localStorage.getItem(key));
+}
+
+            // for (var i = 0; i < localStorage.length; i++)
+            //     {
+            //         $('#log').prepend(localStorage.getItem(localStorage.key(i)));
+            //     }
         });
-
-
-        // key = date in milliseconds
-        // value = textinput
     </script>
 </head>
 
