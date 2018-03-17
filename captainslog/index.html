@@ -33,15 +33,11 @@
                 }
             }); 
 
-            //load previous localstorage items in log div
-            for(var key in localStorage) {
-  $('body').append(localStorage.getItem(key));
-}
-
-            // for (var i = 0; i < localStorage.length; i++)
-            //     {
-            //         $('#log').prepend(localStorage.getItem(localStorage.key(i)));
-            //     }
+             //load previous localstorage items in log div
+            for (var i = 0; i < localStorage.length; i++)
+                {
+                    $('#log').prepend(localStorage.getItem(localStorage.key(i)));
+                }
         });
     </script>
 </head>
