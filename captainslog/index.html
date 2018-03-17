@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Captain's Log</title>
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function()
+        {
+            //outside keypress function, iterate through localStorage and place in log div
+            // for (var i = 0; i < localStorage.length; i++)
+            // {
+            //     date = datetime.getTime();
+            //     $('body').append(localStorage.getItem(localStorage.key(i)));
+            // }
+
+            $(document).keypress(function(e) 
+            {
+                // on hitting enter 
+                if(e.which == 13)
+                {
+                    var date = new Date();
+                    var key = date.getTime();
+                    console.log(date)
+                    console.log(key)
+
+                    // set input to text var
+                    var text = $('#msg').val();
+
+                    // add to local storage
+                    localStorage.setItem(key, text);
+
+                    // prepend text to "log" div
+                    $('#log').prepend(text);
+
+
+                }
+            }); 
+        });
+
+
+        // key = date in milliseconds
+        // value = textinput
+    </script>
+</head>
+
+<body>
+    <h1>Captain's Log</h1>
+    <h3>New entry: <input type="text" id="msg" name="msg" size="30" /></h3>
+    <div id="log"></div>
+</body>
+</html>
