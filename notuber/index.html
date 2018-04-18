@@ -66,22 +66,14 @@
           });
           
           myMarker.setMap(map);
-          
-          //global info window
-          
-          // var infowindow = new google.maps.InfoWindow();
-          // // Open info window on click of marker
-          // google.maps.event.addListener(myMarker, 'click', function() {
-          //   infowindow.setContent(myMarker.title);
-          //   infowindow.open(map, myMarker);
-          // });
+      
           requestData(map, myMarker, me);
         }
 
       function requestData(map, myMarker, me)
         {
           var request = new XMLHttpRequest();
-          request.open('POST', "https://jordan-marsh.herokuapp.com/rides", true);
+          request.open('POST', "https://ancient-dusk-55721.herokuapp.com/rides", true);
           request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
           request.onload = function () 
           {
