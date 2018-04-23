@@ -1,0 +1,32 @@
+body {
+    max-width: 70%;
+    margin: auto;
+    font-family: Roboto, sans-serif;
+    line-height: 150%;
+}
+
+h2 {
+    max-width: 100%;
+    text-align: center;
+    background-color: dimgrey;
+    color: white;
+    font-family: roboto slab;
+    padding: 15px 5px 15px 5px;
+    margin: 0;
+	border: 0;
+   
+}
+
+.subheading {
+    font-weight: bold;
+}
+
+h3 {
+
+}
+
+.image {
+    max-width: 100%;
+    height: auto;
+}
+
