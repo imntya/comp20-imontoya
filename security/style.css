@@ -2,29 +2,46 @@ body {
     max-width: 70%;
     margin: auto;
     font-family: Roboto, sans-serif;
-    line-height: 150%;
+    line-height: 170%;
+    background-color: grey;
+    color: lightgrey;
 }
 
 h2 {
     max-width: 100%;
     text-align: center;
-    background-color: dimgrey;
-    color: white;
+    background-color: lightgrey;
+    color: dimgrey;
     font-family: roboto slab;
     padding: 15px 5px 15px 5px;
     margin: 0;
+    margin-top: 50px;
 	border: 0;
-   
-}
-
-.subheading {
-    font-weight: bold;
+    font-size: 200%;
 }
 
 h3 {
-
+    color: white;
+}
+.subheading {
+    font-weight: bold;
+    color: white;
 }
 
+code {
+    color: lightseagreen;
+    background-color: black;
+    padding: 3px;
+    border-radius: 5px;
+}
+
+h6 {
+color: dimgrey;
+}
+
+p{
+    text-align:justify;
+}
 .image {
     max-width: 100%;
     height: auto;

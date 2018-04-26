@@ -4,7 +4,6 @@
 
   <head>
     <title>Security</title>
-<!--    <link rel="stylesheet" type="text/css" href="reset.css">-->
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <meta charset="utf-8">
@@ -16,72 +15,93 @@
 		<p>My name is Isabella Montoya, or imonto01. I was hired to break in to Ashley Wicks' client-side and server-side code for the NotUber project to find and provide solutions for vulnerabilitites. Client Ming has requested I find at least 3 vulnerabilities.</p>
 
 		<h2>Methodology</h2>
-		<p>I started by reading through the links provided by Ming on the <a href="https://tuftsdev.github.io/WebProgramming/">WebProgramming</a> website. I then checked Ashley's code to see if it sanitized input or not. Since it didn't, I decided to <code>curl</code> a link to an image, something else, and something else. </p>
+		<p>I started by reading through the links provided by Ming on the <a href="https://tuftsdev.github.io/WebProgramming/">WebProgramming</a> website. I then checked Ashley's code to see if it sanitized input or not. Since it didn't, I decided to try a few methods taugh in class: <code>curl</code>ing a link to an image instead of a username, putting <code>[$ne]</code> after the username in the query string (like such: <code>https://whispering-temple-81385.herokuapp.com/vehicle.json?username[$ne]=JANET</code>), and <code>curl</code>ing JavaScript in place of a username. The first and third attacks worked, but the second one did not, so I set out on finding a third vulnerability. I chanced upon a post on Piazza that talked about overloading the server, and did more reseacrh on that, and chose it to be the third vulnerability. After this, I looked for ways to resolve all three vulnerabilities, and put together this document. </p>
         
         <h2>Abstract of Findings</h2>
         <p>
-        What the heck do i put in here aaaaAAAAAAAAaaaaaaaaaaAA
+        Due to the input not being sanitized, I was able to inject a link to an image and a JavaScript alert into the database disguised as a username. When I accessed <code>/</code> and it tried to diplay all the passenger information, it would pull up the link or code and execute it. Additionally, there are no preventative measures in place to prevent the server from overloading and possibly charging Ms. Wicks' Heroku account.
         </p>
 
 		<h2>Issues Found</h2>
 		<p></p>
 
-		<h3>Issue 1: MongoDB Injection of an Image Link</h3>
+		<h3>Issue 1: Cross Site Scripting (XSS) using Image Link</h3>
 		<ul>
-            <li> 
-                <span class="subheading">Location:</span>
+            <li> <span class="subheading">Location:</span>
                 <code>/rides</code></li>
             
-            <li> 
-                <span class="subheading">Severity:</span> 
-                Medium severity. I was able to inject a link to a spiderman meme. Could wreak havoc if used maliciously.</li>
+            <li> <span class="subheading">Severity:</span> 
+                Light-to-medium severity. I was able to inject a link to a spiderman meme. Could wreak havoc if used maliciously.</li>
             
-            <li> 
-                <span class="subheading">Description:</span> 
+            <li> <span class="subheading">Description:</span> 
                 For this vulnerability, I simply curled 
-                <code>"curl --data "username=<img src=""https://i.imgur.com/kZuOEr4.jpg"">&amp;lat=55&amp;lng=66" https://whispering-temple-81385.herokuapp.com/rides" </code>
-                and since the input is not sanitized, it is accepted exectly as I sent, and therefore the username is returned as a link to an image, which is shown when accessing https://whispering-temple-81385.herokuapp.com/ </li>
+                <code>"curl --data "username=<img src=""https://i.imgur.com/kZuOEr4.jpg"">&amp;lat=55&amp;lng=66" https://whispering-temple-81385.herokuapp.com/rides"</code>
+                 and since the input is not sanitized, it is accepted exectly as I sent. Therefore the username is returned as a link to an image, which is shown when accessing https://whispering-temple-81385.herokuapp.com/ </li>
             
-            <li> Proof: Here is the code I curled to `/rides`. I used an image link instead of a username. 
-                <br>
-                <img src="images/issue1code.png" class="image" alt="Code I curled to heroku"> 
-                <br> 
-                And here is the resulting output on index page: 
-                <br>
+            <li> <span class="subheading">Proof:</span> 
+                Here is the code I curled to <code>/rides</code>. I used an image link instead of a username. <br>
+                <img src="images/issue1code.png" class="image" alt="Code I curled to heroku"> <br> 
+                And here is the resulting output on index page: <br>
                 <img src="images/issue1proof.png" class="image" alt="results of curling image instead of username"></li>
             
-            <li> Resolution: Sanitize input. Use something like <code> input = input.replace(/[^\w\s]/gi, '');</code> to remove anything that could turn into code, such as &gt; and &lt; signs used for <code>img</code> tags.</li>
+            <li> <span class="subheading">Resolution:</span> 
+                Sanitize input. Use something like <code> input = input.replace(/[^\w\s]/gi, '');</code> to remove anything that could turn into code, such as <code>&gt;</code> and <code>&lt;</code> signs used for <code>img</code> tags.</li>
         </ul>
 			
-		<h3>Issue 2: Cross Site Scripting</h3>
+		<h3>Issue 2: Cross Site Scripting (XSS) using JavaScript</h3>
 		<ul>
-            <li> Location: <code>/rides</code></li>
-            <li> Severity: Medium severity </li>
-            <li> Description: </li>
-            <li> Proof of vulnerability. Show pictures or it didn't happen.</li>
-            <li> Resolution:</li>
+            <li> <span class="subheading">Location:</span> <code>/rides</code></li>
+            
+            <li> <span class="subheading">Severity:</span> Medium-to-high severity </li>
+            
+            <li> <span class="subheading">Description:</span> 
+                For this vulnerability, I simply curled 
+                <code>"curl --data "username=<img src=""https://i.imgur.com/kZuOEr4.jpg"">&amp;lat=55&amp;lng=66" https://whispering-temple-81385.herokuapp.com/rides</code>
+                 and since the input is not sanitized, it is accepted exectly as I sent, and therefore the username is returned as a JavaScript code that sends an <code>alert</code> to the page, which is shown when attempting to access https://whispering-temple-81385.herokuapp.com/ </li>
+            
+            <li> <span class="subheading">Proof:</span> 
+                Here is the code I curled to <code>/rides</code>. I submitted JavaScript code instead of a username. <br>
+                <img src="images/issue2code.png" class="image" alt="Code I curled to heroku"> <br> 
+                And here is the resulting output on index page: <br>
+                <img src="images/issue2proof.png" class="image" alt="results of curling JS instead of username"></li>
+            
+            <li> <span class="subheading">Resolution:</span> 
+                Like issue 1 above, sanitizing input is the best way to prevent this. Use something like <code> input = input.replace(/[^\w\s]/gi, '');</code> to remove anything that could turn into code, such as <code>&gt;</code> and <code>&lt;</code> signs used for <code>&lt;script&gt;</code> tags.</li>
         </ul>
 
-		<h3>Issue 3</h3>
+		<h3>Issue 3: Server Overloading</h3>
 		<ul>
-            <li> Location: </li>
-            <li> Severity: </li>
-            <li> Description: </li>
-            <li> Proof of vulnerability. Show pictures or it didn't happen.</li>
-            <li> Resolution:</li>
+            <li> <span class="subheading">Location:</span> submitting data to database through <code>/rides</code> </li>
+            
+            <li> <span class="subheading">Severity:</span> Pretty Damn High </li>
+            
+            <li> <span class="subheading">Description:</span>
+                If I or a malicious attacker decided to send so much information to the server (with images it would take less time), it would overload and stop working. It could cause a lot of damage by disrupting service (usually the main goal), increasing costs, and possibly losing data. If the service being attacked is important to the health of people, such as an Emergency Line, the consequences could be terrible and people could even die due tot he attack. </li>
+            
+            <li> <span class="subheading">Proof:</span> 
+                Since this would likely take a while to do single-handedly (Denial of Service, or DoS), and I dont want to pay to rent a bunch of computer-bots (Distributed Denial of Service, or DDoS), this is a theoretical vulnerability. Below is an example of what a DDoS attack theoretically looks like.<br>
+                <img src="images/ddos-attack-example.png" class="image" alt="results of curling image instead of username"> </li>
+            
+            <li> <span class="subheading">Resolution:</span>
+                Though it is diffucult to defend against a DDoS attack, there are ways to do it. One site advocatess for the use of a collection of reverse proxies, which act as bouncers do at a nightclub. They distribute the traffic, reducing the risk of a flood of attacks.</li>
         </ul>
 
 		<h2>Conclusions</h2>
-		<p>I DONE LEARNT THINGS</p>
+		<p>I learned that there are many ways of breaking a site if the site is not propery secured against common and simple-to-solve vulnerabilities. XSS and DoS/DDoS attacks are two very different but highly effective ways of attacking. I recommend sanitizing input and possibly restricting the length of input if possible to prevent XSS attacks, and deploying a collection of reverse proxies to prevent ot minimize the extent of a DDoS attack.</p>
 
 		<h2>References</h2>
 		<ul>
             <li><a href="http://www.veracode.com/security/xss">Veracode on XSS</a></li>
             <li><a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)">OWASP on XSS</a></li>
-            <li><a href="http://www.veracode.com/security/xss">http://www.veracode.com/security/xss</a></li>
-            <li><a href="http://www.veracode.com/security/xss">http://www.veracode.com/security/xss</a></li>
+            <li><a href="https://www.youtube.com/watch?v=lcO1BTNh8r8">Ming's DEFCON presentation on abusing NoSQL databases</a></li>
+            <li><a href="https://piazza.com/class/jby7ch9rnsb45o?cid=343">Piazza post abut overloading server</a></li>
+            <li><a href=" https://www.esecurityplanet.com/network-security/how-to-prevent-dos-attacks.html">Article about DoS and DDoS attacks</a></li>
+           
         
         </ul>
 
+        <footer>
+        <h6>Thanks for a great class, Ming!</h6>
+        </footer>
 	</body>
 </html>
